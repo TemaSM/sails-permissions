@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var _super = require('sails-auth/api/models/User');
+const _ = require('lodash')
+const _super = require('sails-auth/api/models/User')
 
 _.merge(exports, _super);
 _.merge(exports, {
@@ -19,7 +19,7 @@ _.merge(exports, {
    * Attach default Role to a new User
    */
   afterCreate: [
-    function setOwner (user, next) {
+    function setOwner(user, next) {
       sails.log.verbose('User.afterCreate.setOwner', user);
       User
         .update({ id: user.id }, { owner: user.id })
@@ -31,7 +31,7 @@ _.merge(exports, {
           next(e);
         });
     },
-    function attachDefaultRole (user, next) {
+    function attachDefaultRole(user, next) {
       sails.log('User.afterCreate.attachDefaultRole', user);
       User.findOne(user.id)
         .populate('roles')

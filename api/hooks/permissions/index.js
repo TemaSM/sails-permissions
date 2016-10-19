@@ -1,3 +1,7 @@
+const path = require('path')
+const _ = require('lodash')
+const Marlinspike = require('marlinspike')
+
 var permissionPolicies = [
   'passport',
   'sessionAuth',
@@ -6,17 +10,14 @@ var permissionPolicies = [
   'PermissionPolicy',
   'RolePolicy'
 ]
-import path from 'path'
-import _ from 'lodash'
-import Marlinspike from 'marlinspike'
 
 class Permissions extends Marlinspike {
-  constructor (sails) {
+  constructor(sails) {
     super(sails, module)
   }
 
-  configure () {
-    if (!_.isObject(sails.config.permissions)) sails.config.permissions = { }
+  configure() {
+    if (!_.isObject(sails.config.permissions)) sails.config.permissions = {}
 
     /**
      * Local cache of Model name -> id mappings to avoid excessive database lookups.
@@ -24,7 +25,7 @@ class Permissions extends Marlinspike {
     this.sails.config.blueprints.populate = false
   }
 
-  initialize (next) {
+  initialize(next) {
     let config = this.sails.config.permissions
 
     this.installModelOwnership()
@@ -59,16 +60,16 @@ class Permissions extends Marlinspike {
     })
   }
 
-  validatePolicyConfig () {
+  validatePolicyConfig() {
     var policies = this.sails.config.policies
     return _.all([
       _.isArray(policies['*']),
       _.intersection(permissionPolicies, policies['*']).length === permissionPolicies.length,
-      policies.AuthController && _.contains(policies.AuthController['*'], 'passport')
+      policies.AuthController && _.includes(policies.AuthController['*'], 'passport')
     ])
   }
 
-  installModelOwnership () {
+  installModelOwnership() {
     var models = this.sails.models
     if (this.sails.config.models.autoCreatedBy === false) return
 
@@ -92,12 +93,12 @@ class Permissions extends Marlinspike {
   * Install the application. Sets up default Roles, Users, Models, and
   * Permissions, and creates an admin user.
   */
-  initializeFixtures () {
+  initializeFixtures() {
     let fixturesPath = path.resolve(__dirname, '../../../config/fixtures/')
     return require(path.resolve(fixturesPath, 'model')).createModels()
       .then(models => {
         this.models = models
-        this.sails.hooks.permissions._modelCache = _.indexBy(models, 'identity')
+        this.sails.hooks.permissions._modelCache = _.keyBy(models, 'identity')
 
         return require(path.resolve(fixturesPath, 'role')).create()
       })
@@ -123,9 +124,9 @@ class Permissions extends Marlinspike {
       })
   }
 
-  validateDependencies () {
+  validateDependencies() {
     return !!this.sails.hooks.auth;
   }
 }
 
-export default Marlinspike.createSailsHook(Permissions)
+module.exports = Marlinspike.createSailsHook(Permissions)

@@ -3,8 +3,10 @@
  *
  * @public
  */
-import _ from 'lodash'
+const _ = require('lodash')
+
 exports.createModels = function () {
+
   sails.log.verbose('sails-permissions: syncing waterline models');
 
   var models = _.compact(_.map(sails.models, function (model, name) {
@@ -18,4 +20,5 @@ exports.createModels = function () {
   return Promise.all(_.map(models, function (model) {
     return sails.models.model.findOrCreate({ name: model.name }, model);
   }));
-};
+
+}

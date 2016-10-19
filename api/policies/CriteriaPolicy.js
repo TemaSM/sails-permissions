@@ -4,10 +4,10 @@
  *
  * Verify that the User fulfills permission 'where' conditions and attribute blacklist restrictions
  */
-var wlFilter = require('waterline-criteria');
-import _ from 'lodash'
+const wlFilter = require('waterline-criteria')
+const _ = require('lodash');
 
-module.exports = function(req, res, next) {
+module.exports = function (req, res, next) {
   var permissions = req.permissions;
 
   if (_.isEmpty(permissions)) {
@@ -37,9 +37,9 @@ module.exports = function(req, res, next) {
     var criteria = _.compact(_.flatten(
       _.map(
         _.pluck(permissions, 'criteria'),
-        function(c) {
+        function (c) {
           if (c.length == 0) {
-            return [{where: {}}];
+            return [{ where: {} }];
           }
           return c;
         }
@@ -53,7 +53,7 @@ module.exports = function(req, res, next) {
   }
 
   PermissionService.findTargetObjects(req)
-    .then(function(objects) {
+    .then(function (objects) {
 
       // attributes are not important for a delete request
       if (action === 'delete') {
@@ -92,8 +92,8 @@ function responsePolicy(criteria, _data, options) {
   // remove undefined, since that is invalid input for waterline-criteria
   data = data.filter(item => { return item !== undefined })
 
-  var permitted = data.reduce(function(memo, item) {
-    criteria.some(function(crit) {
+  var permitted = data.reduce(function (memo, item) {
+    criteria.some(function (crit) {
       var filtered = wlFilter([item], {
         where: {
           or: [crit.where || {}]

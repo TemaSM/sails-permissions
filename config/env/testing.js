@@ -1,5 +1,5 @@
-var _ = require('lodash');
-var path = require('path');
+const _ = require('lodash');
+const path = require('path');
 
 /**
  * Testing environment settings
@@ -27,9 +27,9 @@ module.exports = {
   port: 1336,
   routes: {
     "DELETE /role/:parentid/users/:id": {
-        controller: 'RoleController',
-        action: 'remove',
-        alias: 'users'
+      controller: 'RoleController',
+      action: 'remove',
+      alias: 'users'
     }
   }
 };

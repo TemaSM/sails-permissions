@@ -1,6 +1,6 @@
-var fnv = require('fnv-plus');
-var _ = require('lodash');
-var url = require('url');
+const fnv = require('fnv-plus')
+const _ = require('lodash')
+const url = require('url')
 
 module.exports = function (req, res, next) {
   var ipAddress = req.headers['x-forwarded-for'] || (req.connection && req.connection.remoteAddress);
@@ -20,7 +20,7 @@ module.exports = function (req, res, next) {
   next();
 };
 
-function sanitizeRequestUrl (req) {
+function sanitizeRequestUrl(req) {
   var requestUrl = url.format({
     protocol: req.protocol,
     host: req.host || sails.getHost(),

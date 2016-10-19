@@ -4,4 +4,4 @@ module.exports = require('sails-generate-entities')({
   statics: [
     'config/permissions.js'
   ],
-});
+})

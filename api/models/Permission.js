@@ -4,7 +4,8 @@
  * @description
  *   The actions a Role is granted on a particular Model and its attributes
  */
-import _ from 'lodash'
+const _ = require('lodash')
+
 module.exports = {
   autoCreatedBy: false,
 
@@ -81,13 +82,13 @@ module.exports = {
   },
 
   afterValidate: [
-    function validateOwnerCreateTautology (permission, next) {
+    function validateOwnerCreateTautology(permission, next) {
       if (permission.relation == 'owner' && permission.action == 'create') {
         next(new Error('Creating a Permission with relation=owner and action=create is tautological'));
       }
 
       if (permission.action === 'delete' &&
-              _.filter(permission.criteria, function (criteria) { return !_.isEmpty(criteria.blacklist); }).length) {
+        _.filter(permission.criteria, function (criteria) { return !_.isEmpty(criteria.blacklist); }).length) {
         next(new Error('Creating a Permission with an attribute blacklist is not allowed when action=delete'));
       }
 

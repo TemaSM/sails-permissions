@@ -8,9 +8,9 @@
  * By this point, we know we have some permissions related to the action and object
  * If they are 'owner' permissions, verify that the objects that are being accessed are owned by the current user
  */
-import _ from 'lodash'
+const _ = require('lodash');
 
-module.exports = function(req, res, next) {
+module.exports = function (req, res, next) {
   var permissions = req.permissions;
   var relations = _.groupBy(permissions, 'relation');
   var action = PermissionService.getMethod(req.method);
@@ -40,10 +40,10 @@ module.exports = function(req, res, next) {
   }
 
   PermissionService.findTargetObjects(req)
-    .then(function(objects) {
-        // PermissionService.isAllowedToPerformAction checks if the user has 'user' based permissions (vs role or owner based permissions)
+    .then(function (objects) {
+      // PermissionService.isAllowedToPerformAction checks if the user has 'user' based permissions (vs role or owner based permissions)
       return PermissionService.isAllowedToPerformAction(objects, req.user, action, ModelService.getTargetModelName(req), req.body)
-        .then(function(hasUserPermissions) {
+        .then(function (hasUserPermissions) {
           if (hasUserPermissions) {
             return next();
           }
